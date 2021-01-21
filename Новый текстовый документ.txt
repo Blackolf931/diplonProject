@@ -1,0 +1,358 @@
+__   __ __  __  ____   ___      _______________________________________________
+||   || ||  || ||  || ||__      Hugs 98: Based on the Haskell 98 standard
+||___|| ||__|| ||__||  __||     Copyright (c) 1994-2005
+||---||         ___||           World Wide Web: http://haskell.org/hugs
+||   ||                         Bugs: http://hackage.haskell.org/trac/hugs
+||   || Version: Sep 2006       _______________________________________________
+
+Haskell 98 mode: Restart with command line option -98 to enable extensions
+
+ERROR - Can't find module "Hugs"
+Prelude> set+t
+ERROR - Undefined variable "t"
+Prelude> set+ t
+ERROR - Undefined variable "t"
+Prelude> set+ 150
+ERROR - Undefined variable "set"
+Prelude> :set + t
+ERROR - Option string must begin with `+' or `-'
+Prelude> :set+t
+Command not recognised.  Type :? for help
+Prelude> 1
+1
+Prelude> 50000
+50000
+Prelude> :set+t
+Command not recognised.  Type :? for help
+Prelude> :set+t
+Command not recognised.  Type :? for help
+Prelude> :set +t
+Prelude> 50000
+50000 :: Integer
+Prelude> :set +t
+Prelude> 5.555
+5.555 :: Double
+Prelude> :set +t
+Prelude> 5
+5 :: Integer
+Prelude> :set +t
+Prelude> "5555"
+"5555" :: String
+Prelude> :set +t
+Prelude> True
+True :: Bool
+Prelude> 5^2 +2*4-3
+30 :: Integer
+Prelude> sqrt 9 -1
+2.0 :: Double
+Prelude> sqrt 9 - sqrt 1
+2.0 :: Double
+Prelude> sqrt (9 - 1)
+2.82842712474619 :: Double
+Prelude> 5^5000
+707981126104817289238561515869405755294754851033943135872983022354636725918978852356936617178209419490878973452563965339183820773988031459112609583574024772414640097195739733597493258292593911533504739129562268204071543557621957154167022936179401953583027498888113205291131968782470891300838597837767141120435864584992782498977697188157361872430827823292296401471764360281247533822455313413766682060553932420574517776301414054626770797641835849797451428751644466181183703726412427157095230416888725385040703660226592153367059978408638148558513504111695621640692451932474392591862086414819185411626773791894994406168428507759246036924025777055357634896392169028549036674103917910390123122026237318112696017863462920301988823600406575146406640220049422091896369590598171407466964728135904684855753117832489846993604759914783064078886140089964789897656050101227066192624846386331984057164665045089924494201539625270697001187881367962390678914347793862826506105520522644312446025531144551458101186353863369680344655638936659243461237047173113997323419240412309234484733099352710874923612021267465043711970047164802814255606911894738040841457737462769926351765921497218350718784849752154228451165042072134597327525335997948231177086940097213446082140059915107029942268346321886596896076937508927199012560894227229861170835063193275562021655101536236330392392560284269833080850069225364145744041774719178688107329684429743622501012856814212179621956483521095295256072246433804673641098169442421756072664412572756068078247510287091884049267578536219177944311892558255695997942118063005962081586901411245274525575806516139720891453293660077291681544869718136317960388216759144498700593953034024139135735103124006507920130411563051290739875984048739020488326068529205350781977646815046055443486981291399460529094566305794525629146876693677088044738908686804347196497790461267195461802633892093576728372128157045527262052597588192804596934693965313703514210025054163635229941466228182104869570346515078168365869381882109967945590741197592442263451236363750258092727874023979540960114272841323821052516941436134247701517169999814769839532764839776626052019008163918462618920729243597086790637140819874056907380954653357507380280101201406554851578811603612887346184819892410309790807676958393749413603843527609157765970918264120001431829968288711129314171016323604872104191715752072056076969875014335371143311436121427942641176783819806495788793449586107462432457828935820874523018002326573371792275015803915053481566654356918630304140682380843674161521948022693397290784975190390781275867052374659946411526516709716741457509930231987396218492078717684129372785516243421194962533072587730083679557809072920867899262695422115745849378702041873836208484588138353404200282814583321829273357782799351140151928133046956866681416868222010377328757665786112914048811034184468356702964021329974343241021330927039341751619321874202115674346757441157374401525357918166344453300419680167601865115273735906123647023740700358389324813508748499074050587298089643054453078889240301136311191957019220390199646507831381734309940864311750332699027888526776401931414364779827948392399653273629534302153643623085259212876401132505810189856324361229541420581892390594980665389051201415304966659892733421858023871180673239243966746682739082260675890364646350652746356173110434511970494688017873356301443418837517927867506014065709373192775928693374280563902320031056203237259164457017960626894481634963085525669157505035400390625 :: Integer
+Prelude> 2 *cospi
+ERROR - Undefined variable "cospi"
+Prelude> 2 *cos pi
+-2.0 :: Double
+Prelude> (5,(("hello","world"),'a))'
+ERROR - Improperly terminated character constant
+Prelude> (5,(("hello","world"),'a'))
+(5,(("hello","world"),'a')) :: (Integer,(([Char],[Char]),Char))
+Prelude> fst
+ERROR - Cannot find "show" function for:
+*** Expression : fst
+*** Of type    : (a,b) -> a
+
+Prelude> fst(5,(("hello","world"),'a'))
+5 :: Integer
+Prelude> snd(5,(("hello","world"),'a'))
+(("hello","world"),'a') :: (([Char],[Char]),Char)
+Prelude> (5,fst(("hello","world"),'a'))
+(5,("hello","world")) :: (Integer,([Char],[Char]))
+Prelude> (5,(fst("hello","world"),'a'))
+(5,("hello",'a')) :: (Integer,([Char],Char))
+Prelude> (5,((fst "hello","world"),'a'))
+ERROR - Type error in application
+*** Expression     : fst "hello"
+*** Term           : "hello"
+*** Type           : String
+*** Does not match : (a,b)
+
+Prelude> (5,(snd("hello","world"),'a'))
+(5,("world",'a')) :: (Integer,([Char],Char))
+Prelude> snd(5,(("hello","world"),'a'))
+(("hello","world"),'a') :: (([Char],[Char]),Char)
+Prelude> snd fst(5,(("hello","world"),'a'))
+ERROR - Type error in application
+*** Expression     : snd fst (5,(("hello","world"),'a'))
+*** Term           : fst
+*** Type           : (d,e) -> d
+*** Does not match : (a,(b,(([Char],[Char]),Char)) -> c)
+
+Prelude> snd (5,(fst("hello","world"),'a'))
+("hello",'a') :: ([Char],Char)
+Prelude> snd (5,snd(fst("hello","world"),'a'))
+'a' :: Char
+Prelude> fst(5,(fst("hello","world"),'a'))
+5 :: Integer
+Prelude> (5,fst(fst("hello","world"),'a'))
+(5,"hello") :: (Integer,[Char])
+Prelude> snd(5,fst(fst("hello","world"),'a'))
+"hello" :: [Char]
+Prelude> snd fst fst(5,(("hello","world"),'a'))
+ERROR - Type error in application
+*** Expression     : snd fst fst (5,(("hello","world"),'a'))
+*** Term           : fst
+*** Type           : (f,g) -> f
+*** Does not match : (a,((b,c) -> b) -> (d,(([Char],[Char]),Char)) -> e)
+
+Prelude> snd fst fst(5,(("hello","world"),'a'))
+ERROR - Type error in application
+*** Expression     : snd fst fst (5,(("hello","world"),'a'))
+*** Term           : fst
+*** Type           : (f,g) -> f
+*** Does not match : (a,((b,c) -> b) -> (d,(([Char],[Char]),Char)) -> e)
+
+Prelude> fst(5,(("hello","world"),'a'))
+5 :: Integer
+Prelude> fst snd(5,(("hello","world"),'a'))
+ERROR - Type error in application
+*** Expression     : fst snd (5,(("hello","world"),'a'))
+*** Term           : snd
+*** Type           : (d,e) -> e
+*** Does not match : ((a,(([Char],[Char]),Char)) -> b,c)
+
+Prelude> fstsnd(5,(("hello","world"),'a'))
+ERROR - Undefined variable "fstsnd"
+Prelude> fst snd(5,(("hello","world"),'a'))
+ERROR - Type error in application
+*** Expression     : fst snd (5,(("hello","world"),'a'))
+*** Term           : snd
+*** Type           : (d,e) -> e
+*** Does not match : ((a,(([Char],[Char]),Char)) -> b,c)
+
+Prelude> snd (fst (5,(("hello","world"),'a')))
+ERROR - Cannot infer instance
+*** Instance   : Num (a,b)
+*** Expression : snd (fst (5,(("hello","world"),'a')))
+
+Prelude> snd (fst(5,(("hello","world"),'a')))
+ERROR - Cannot infer instance
+*** Instance   : Num (a,b)
+*** Expression : snd (fst (5,(("hello","world"),'a')))
+
+Prelude> fst(snd(5,(("hello","world"),'a')))
+("hello","world") :: ([Char],[Char])
+Prelude> fst(fst(snd(5,(("hello","world"),'a'))))
+"hello" :: [Char]
+Prelude> snd(fst(snd(5,(("hello","world"),'a'))))
+"world" :: [Char]
+Prelude> snd(snd(fst(5,(("hello","world"),'a'))))
+ERROR - Cannot infer instance
+*** Instance   : Num (a,(b,c))
+*** Expression : snd (snd (fst (5,(("hello","world"),'a'))))
+
+Prelude> snd(snd((5,(("hello","world"),'a'))))
+'a' :: Char
+Prelude> 1:[2,3]
+[1,2,3] :: [Integer]
+Prelude> '1':[2,3]
+ERROR - Cannot infer instance
+*** Instance   : Num Char
+*** Expression : '1' : [2,3]
+
+Prelude> zip["20,30"]
+ERROR - Cannot find "show" function for:
+*** Expression : zip ["20,30"]
+*** Of type    : [a] -> [([Char],a)]
+
+Prelude> zip ["20,30"]
+ERROR - Cannot find "show" function for:
+*** Expression : zip ["20,30"]
+*** Of type    : [a] -> [([Char],a)]
+
+Prelude> zip ["20,30"][1,2,3]
+[("20,30",1)] :: [([Char],Integer)]
+Prelude> take ["20,30"][1,2,3]
+ERROR - Type error in application
+*** Expression     : take ["20,30"] [1,2,3]
+*** Term           : ["20,30"]
+*** Type           : [[Char]]
+*** Does not match : Int
+
+Prelude> take 2 ["20,30"][1,2,3]
+ERROR - Type error in application
+*** Expression     : take 2 ["20,30"] [1,2,3]
+*** Term           : take
+*** Type           : Int -> [e] -> [e]
+*** Does not match : a -> b -> c -> d
+
+Prelude> take 2["20,30"][1,2,3]
+ERROR - Type error in application
+*** Expression     : take 2 ["20,30"] [1,2,3]
+*** Term           : take
+*** Type           : Int -> [e] -> [e]
+*** Does not match : a -> b -> c -> d
+
+Prelude> take2 ["20,30"][1,2,3]
+ERROR - Undefined variable "take2"
+Prelude> take 2["20,30"][1,2,3]
+ERROR - Type error in application
+*** Expression     : take 2 ["20,30"] [1,2,3]
+*** Term           : take
+*** Type           : Int -> [e] -> [e]
+*** Does not match : a -> b -> c -> d
+
+Prelude> take 2["20,30"]
+["20,30"] :: [[Char]]
+Prelude> take 2["20","30"]
+["20","30"] :: [[Char]]
+Prelude> take 2["20","30",5]
+ERROR - Cannot infer instance
+*** Instance   : Num [Char]
+*** Expression : take 2 ["20","30",5]
+
+Prelude> take 2["20","30","5"]
+["20","30"] :: [[Char]]
+Prelude> take 3["20","30","5"]
+["20","30","5"] :: [[Char]]
+Prelude> head ["20","30","5"]
+"20" :: [Char]
+Prelude>  ["20","30","5"]zip
+ERROR - Type error in application
+*** Expression     : ["20","30","5"] zip
+*** Term           : ["20","30","5"]
+*** Type           : [[Char]]
+*** Does not match : a -> b
+
+Prelude> zip ["20","30","5"]
+ERROR - Cannot find "show" function for:
+*** Expression : zip ["20","30","5"]
+*** Of type    : [a] -> [([Char],a)]
+
+Prelude> zip [["20"],30] [1,2]
+ERROR - Cannot infer instance
+*** Instance   : Num [[Char]]
+*** Expression : zip [["20"],30] [1,2]
+
+Prelude> zip ["20","30"] [1,2]
+[("20",1),("30",2)] :: [([Char],Integer)]
+Prelude> zip ["20","30"] [1,2] ["aaa"] [1.30]
+ERROR - Type error in application
+*** Expression     : zip ["20","30"] [1,2] ["aaa"] [1.3]
+*** Term           : zip
+*** Type           : [f] -> [g] -> [(f,g)]
+*** Does not match : a -> b -> c -> d -> e
+
+Prelude> zip ["20","30"] [1,2] ["aaa"] [,30]
+ERROR - Syntax error in expression (unexpected comma)
+Prelude> zip ["20","30"] [1,2] ["aaa"] [1,30]
+ERROR - Type error in application
+*** Expression     : zip ["20","30"] [1,2] ["aaa"] [1,30]
+*** Term           : zip
+*** Type           : [f] -> [g] -> [(f,g)]
+*** Does not match : a -> b -> c -> d -> e
+
+Prelude> zip ["20","30"] [1,2] ['aaa'] [1,30]
+ERROR - Improperly terminated character constant
+Prelude> zip ["20","30"] [1,2] ['aaa','bbb'] [1,30]
+ERROR - Improperly terminated character constant
+Prelude> zip ['20','30'] [1,2]
+ERROR - Improperly terminated character constant
+Prelude> zip ["20","30"] [1,2] ["aaa","bbb"] [1,30]
+ERROR - Type error in application
+*** Expression     : zip ["20","30"] [1,2] ["aaa","bbb"] [1,30]
+*** Term           : zip
+*** Type           : [f] -> [g] -> [(f,g)]
+*** Does not match : a -> b -> c -> d -> e
+
+Prelude> [(5,"ds")]
+[(5,"ds")] :: [(Integer,[Char])]
+Prelude> [("ds",5)]
+[("ds",5)] :: [([Char],Integer)]
+Prelude> [(("ds",5))]
+[("ds",5)] :: [([Char],Integer)]
+Prelude> [("ds",5)] [("ada"),true]
+ERROR - Undefined variable "true"
+Prelude> [("ds",5)] [(("ada"),true)]
+ERROR - Undefined variable "true"
+Prelude> [("ds",5)] [(("ada"),"true")]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] [("ada","true")]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],c)]
+*** Does not match : a -> b
+
+Prelude> [("ds",5)] [(("ada","5"))]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] [("ada","5")]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],c)]
+*** Does not match : a -> b
+
+Prelude> [("ds",5)] [("ada")]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] ["ada"]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],c)]
+*** Does not match : a -> b
+
+Prelude> [("ds",5)] [("ada",5)]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] [("ada",5)]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],c)]
+*** Does not match : a -> b
+
+Prelude> [("ds",5)] zip[("ada",5)]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] zip [("ada",5)]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],d)]
+*** Does not match : a -> b -> c
+
+Prelude> [("ds",5)]zip [("ada",5)]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] zip [("ada",5)]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],d)]
+*** Does not match : a -> b -> c
+
+Prelude> [("ds",5)]zip [("ada",5.2)]
+ERROR - Type error in application
+*** Expression     : [("ds",5)] zip [("ada",5.2)]
+*** Term           : [("ds",5)]
+*** Type           : [([Char],d)]
+*** Does not match : a -> b -> c
+
+Prelude> [("ds",5)]
+[("ds",5)] :: [([Char],Integer)]
+Prelude> (("ds",5))
+("ds",5) :: ([Char],Integer)
+Prelude> (("d",5))
+("d",5) :: ([Char],Integer)
+Prelude> (('d',5))
+('d',5) :: (Char,Integer)
+Prelude> (('d',5),"aaaa")
+(('d',5),"aaaa") :: ((Char,Integer),[Char])
+Prelude> (('d',5),aaaa)
+ERROR - Undefined variable "aaaa"
+Prelude> (('d',5),'aaaa')
+ERROR - Improperly terminated character constant
+Prelude> (('d',5),"aaaa") [2.34]
+ERROR - Type error in application
+*** Expression     : (('d',5),"aaaa") [2.34]
+*** Term           : (,)
+*** Type           : e -> f -> (e,f)
+*** Does not match : a -> b -> c -> d
+
+Prelude> (('d',5),"aaaa")) [2.34]
+ERROR - Syntax error in input (unexpected `)')
+Prelude> (('d',5),"aaaa")[2.34])
+ERROR - Syntax error in input (unexpected `)')
+Prelude> (('d',5),"aaaa"),[2.34])
+ERROR - Syntax error in input (unexpected comma)
+Prelude> (('d',5),"aaaa",[2.34])
+(('d',5),"aaaa",[2.34]) :: ((Char,Integer),[Char],[Double])
+Prelude> [("ada",5.2)]
