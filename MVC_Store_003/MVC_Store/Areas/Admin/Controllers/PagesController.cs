@@ -92,5 +92,111 @@ namespace MVC_Store.Areas.Admin.Controllers
             //Redirect user to Index 
             return RedirectToAction("Index");
         }
+       
+        //GET: Admin/Pages/EditPage/id
+        [HttpGet]
+        public ActionResult EditPage(int id)
+        {
+            //Declare model PageVM
+            PageVM model;
+
+            using (Db db = new Db())
+            {
+                //Get page
+                PagesDTO dto = db.Pages.Find(id);
+
+                //Check on available page
+                if(dto == null)
+                {
+                    return Content("This page not found");
+                }
+                //Initialize model dto
+                model = new PageVM(dto);
+            }
+            //return model in view
+
+            return View(model);
+        }
+
+        //GET: Admin/Pages/EditPage
+        [HttpPost]
+        public ActionResult EditPage(PageVM model)
+        {
+            //Check model on valid
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (Db db = new Db())
+            {
+                //Get id page
+                int id = model.Id;
+                //Declare param for slug
+                string slug = "home";
+
+                //Get page (id)
+                PagesDTO dto = db.Pages.Find(id);
+
+                //Set name из get model DTO
+                dto.Title = model.Title;
+
+                //Check slug on unique and set param
+                if (model.Slug != "home")
+                {
+                    if (string.IsNullOrWhiteSpace(model.Slug))
+                    {
+                        slug = model.Title.Replace(" ", "-").ToLower();
+                    }
+                    else
+                    {
+                        slug = model.Slug.Replace(" ", "-").ToLower();
+                    }
+                }
+            
+                //Check title and slug on unique
+                if(db.Pages.Where(x => x.Id != id).Any(x => x.Title == model.Title))
+                {
+                    ModelState.AddModelError("", "That title already exist.");
+                    return View(model);
+                }
+                else if(db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
+                {
+                    ModelState.AddModelError("", "That slug already exist.");
+                    return View(model);
+                }
+                //set other value to class DTO
+                dto.Slug = slug;
+                dto.Body = model.Body;
+                dto.HasSidebar = model.HasSidebar;
+
+                //Save in database
+                db.SaveChanges();
+            }
+
+            //Set message for user
+            TempData["SM"] = "You have edited the page.";
+
+            //Redirect user
+            return RedirectToAction("EditPage");
+        }
+
+        //GET: Admin/Pages/PageDetails/id
+        public ActionResult PageDetails(int id)
+        {
+            PageVM model;
+            using (Db db = new Db())
+            {
+                PagesDTO dto = db.Pages.Find(id);
+
+                if (dto == null)
+                {
+                    return Content("The page does not exist.");
+                }
+                model = new PageVM(dto);
+            }
+            return View(model);
+        }
+
     }
 }
