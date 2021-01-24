@@ -48,10 +48,11 @@ namespace MVC_Store.Areas.Admin.Controllers
                 string slug;
 
                 //initialize PageDto
-                PagesDTO dto = new PagesDTO();
-
-                //Set title model
-                dto.Title = model.Title.ToUpper();
+                PagesDTO dto = new PagesDTO
+                {
+                    //Set title model
+                    Title = model.Title.ToUpper()
+                };
 
                 //Check have got sgort description
                 if (string.IsNullOrWhiteSpace(model.Slug))
@@ -196,6 +197,53 @@ namespace MVC_Store.Areas.Admin.Controllers
                 model = new PageVM(dto);
             }
             return View(model);
+        }
+
+        //GET: Admin/Pages/DeletePage/id
+        
+        public ActionResult DeletePage(int id)
+        {
+
+            using (Db db = new Db())
+            {
+                //Get Page
+                PagesDTO dto = db.Pages.Find(id);
+                //Delete Page
+                db.Pages.Remove(dto);
+
+                //Save changes in database
+                db.SaveChanges();
+            }
+            //Add message about succesfull delete
+            TempData["SM"] = "You have deleted a page!";
+            
+                //Redirect user to index
+            
+            return RedirectToAction("Index");
+        }
+
+        //Create sort method
+        //GET: Admin/Pages/ReorderPages
+        [HttpPost]
+        public void ReorderPages(int [] id)
+        {
+            using(Db db = new Db())
+            {
+                int count = 1;
+
+                PagesDTO dto;
+
+                foreach(var pageId in id)
+                {
+                    dto = db.Pages.Find(pageId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+
+                    count++;
+                }
+            }
+
         }
 
     }
