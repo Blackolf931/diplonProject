@@ -20,10 +20,10 @@ namespace MVC_Store.Areas.Admin.Controllers
             {
                 pageList = db.Pages.ToArray().OrderBy(x => x.Sorting).Select(x => new PageVM(x)).ToList();
             }
-           //return list to view
+            //return list to view
 
-           return View(pageList);
-        
+            return View(pageList);
+
         }
 
         //GET: Admin/Pages/AddPage
@@ -93,7 +93,7 @@ namespace MVC_Store.Areas.Admin.Controllers
             //Redirect user to Index 
             return RedirectToAction("Index");
         }
-       
+
         //GET: Admin/Pages/EditPage/id
         [HttpGet]
         public ActionResult EditPage(int id)
@@ -107,7 +107,7 @@ namespace MVC_Store.Areas.Admin.Controllers
                 PagesDTO dto = db.Pages.Find(id);
 
                 //Check on available page
-                if(dto == null)
+                if (dto == null)
                 {
                     return Content("This page not found");
                 }
@@ -154,14 +154,14 @@ namespace MVC_Store.Areas.Admin.Controllers
                         slug = model.Slug.Replace(" ", "-").ToLower();
                     }
                 }
-            
+
                 //Check title and slug on unique
-                if(db.Pages.Where(x => x.Id != id).Any(x => x.Title == model.Title))
+                if (db.Pages.Where(x => x.Id != id).Any(x => x.Title == model.Title))
                 {
                     ModelState.AddModelError("", "That title already exist.");
                     return View(model);
                 }
-                else if(db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
+                else if (db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
                 {
                     ModelState.AddModelError("", "That slug already exist.");
                     return View(model);
@@ -200,7 +200,7 @@ namespace MVC_Store.Areas.Admin.Controllers
         }
 
         //GET: Admin/Pages/DeletePage/id
-        
+
         public ActionResult DeletePage(int id)
         {
 
@@ -216,24 +216,24 @@ namespace MVC_Store.Areas.Admin.Controllers
             }
             //Add message about succesfull delete
             TempData["SM"] = "You have deleted a page!";
-            
-                //Redirect user to index
-            
+
+            //Redirect user to index
+
             return RedirectToAction("Index");
         }
 
         //Create sort method
         //GET: Admin/Pages/ReorderPages
         [HttpPost]
-        public void ReorderPages(int [] id)
+        public void ReorderPages(int[] id)
         {
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 int count = 1;
 
                 PagesDTO dto;
 
-                foreach(var pageId in id)
+                foreach (var pageId in id)
                 {
                     dto = db.Pages.Find(pageId);
                     dto.Sorting = count;
@@ -244,6 +244,45 @@ namespace MVC_Store.Areas.Admin.Controllers
                 }
             }
 
+        }
+
+        //GET: Admin/Pages/EditSidebar
+        [HttpGet]
+        public ActionResult EditSidebar()
+        {
+            //Объявляем модель
+            SidebarVM model;
+            using (Db db = new Db())
+            {
+                //Get data from DTO
+                SidebarDTO dto = db.Sidebars.Find(1); //Bad code you aren't use жесткие param
+                //Fill model
+                model = new SidebarVM(dto);
+            }
+            //return view with model
+
+            return View(model);
+        }
+
+        //POST: Admin/Pages/EditSidebar
+        [HttpPost]
+        public ActionResult EditSidebar(SidebarVM model)
+        {
+            using (Db db = new Db())
+            {
+                //Get data from DTO
+                SidebarDTO dto = db.Sidebars.Find(1);//BadCode
+
+                //Set data in Body
+                dto.Body = model.Body;
+
+                //Save changes
+                db.SaveChanges();
+            }
+            //Set message to TempData
+            TempData["SM"] = "You have edited the sidebar!";
+            //Redirect user
+            return RedirectToAction("EditSidebar");
         }
 
     }
