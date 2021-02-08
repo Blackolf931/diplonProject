@@ -1,9 +1,7 @@
 ﻿using MVC_Store.Models.Data;
 using MVC_Store.Models.ViewModels.Shop;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MVC_Store.Areas.Admin.Controllers
@@ -61,7 +59,7 @@ namespace MVC_Store.Areas.Admin.Controllers
             return id;
         }
 
-        //Ger: Admin/Shop/ReorderCategories
+        //Get: Admin/Shop/ReorderCategories
         [HttpPost]
         public void ReorderCategories(int[] id)
         {
@@ -124,5 +122,22 @@ namespace MVC_Store.Areas.Admin.Controllers
             //Return Result
             return "ok";
         }
+
+        //Create method for add products
+        //Get: Admin/Shop/AddProduct
+        public ActionResult AddProduct()
+        {
+            //Initialize model
+            ProductVM model = new ProductVM();
+
+            using(Db db = new Db())
+            {
+                //add list category from database in model
+                model.Categories = new SelectList(db.Categories.ToList(), "id", "Name");
+            }
+            //return model in VM
+            return View(model);
+        }
+
     }
 }
