@@ -19,7 +19,7 @@ namespace MVC_Store.Models.Data
 
         public decimal Price { get; set; }
 
-        public string NameCategory { get; set; }
+        public string CategoryName { get; set; }
 
         public int CategoryId { get; set; }
 

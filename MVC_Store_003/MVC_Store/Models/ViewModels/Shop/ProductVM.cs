@@ -13,6 +13,7 @@ namespace MVC_Store.Models.ViewModels.Shop
     {
         public ProductVM()
         {
+          //  var Files = new List<HttpPostedFileBase>();
         }
 
         public ProductVM(ProductDTO row)
@@ -22,7 +23,7 @@ namespace MVC_Store.Models.ViewModels.Shop
             Slug = row.Slug;
             Description = row.Description;
             Price = row.Price;
-            CategoryName = row.NameCategory;
+            CategoryName = row.CategoryName;
             CategoryId = row.CategoryId;
             ImageName = row.ImageName;
         }
@@ -36,7 +37,7 @@ namespace MVC_Store.Models.ViewModels.Shop
         public string Description { get; set; }
         [Required]
         public decimal Price { get; set; }
-        [Required]
+        
         public string CategoryName { get; set; }
         [DisplayName("Category")]
         public int CategoryId { get; set; }

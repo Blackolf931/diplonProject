@@ -6,7 +6,14 @@
 
 <h2>Add Product</h2>
 
-@using (Html.BeginForm())
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+
+@using (Html.BeginForm("AddProduct", "Shop", FormMethod.Post, new {enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -49,7 +56,7 @@
         <div class="form-group">
             <label class="control-label col-md-2">Product Image</label>
             <div class="col-md-10">
-                <input type="file" ,name="file" , id="imageUpload" />
+                <input type="file" name="imageForSave" id="imageUpload" />
                 <img id="imgpreview" src="~/Content/img/no_image.png" />
             </div>
         </div>
@@ -68,6 +75,5 @@
 
 @section Scripts
     {
-
     <script src="~/Content/ShopJS/AddProductScript.js"></script>
 }
