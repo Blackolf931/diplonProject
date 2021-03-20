@@ -1,5 +1,6 @@
 ﻿using MVC_Store.Models.Data;
 using MVC_Store.Models.ViewModels.Shop;
+using PagedList;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -273,5 +274,36 @@ namespace MVC_Store.Areas.Admin.Controllers
 
         }
 
+
+        //Create Product List
+        //Post: Admin/Shop/Products
+
+        [HttpGet]
+
+        public ActionResult Products(int? page, int? catId)
+        {
+            // Declare ProductVM of type List
+            List<ProductVM> listOfProductVM;
+            //Set number of page
+            var pageNumber = page ?? 1;
+            
+            using (Db db = new Db())
+            {//Intialize ProductVM and fill data
+               
+                listOfProductVM = db.Products.ToArray()
+                     .Where(x => catId == null || catId == 0 || x.CategoryId == catId)
+                     .Select(x => new ProductVM(x)).ToList();
+                //Fill Category list
+                ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                //Set chose a category
+                ViewBag.SelectedCat = catId.ToString();
+            }
+            //Set Navigation for pages
+            //Цифра меняет количество товаров на страницы
+            var onePageOfProducts = listOfProductVM.ToPagedList(pageNumber, 3);
+            ViewBag.onePageOfProducts = onePageOfProducts;
+            // return VM with data
+            return View(listOfProductVM);
+        }
     }
 }

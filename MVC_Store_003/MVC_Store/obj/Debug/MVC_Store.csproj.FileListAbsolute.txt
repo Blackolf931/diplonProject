@@ -138,3 +138,7 @@ D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\obj\Debug\MVC_Store.csprojAssemb
 D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\obj\Debug\MVC_Store.csproj.CopyComplete
 D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\obj\Debug\MVC_Store.dll
 D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\obj\Debug\MVC_Store.pdb
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\PagedList.dll
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\PagedList.Mvc.dll
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\PagedList.xml
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\PagedList.Mvc.xml
