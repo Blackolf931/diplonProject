@@ -305,5 +305,97 @@ namespace MVC_Store.Areas.Admin.Controllers
             // return VM with data
             return View(listOfProductVM);
         }
+
+        //Get:Admin/Shop/EditProduct/id
+        [HttpGet]
+        public ActionResult EditProduct(int id)
+        {
+            // declare model ProductVM
+            ProductVM model;
+            //Get Product
+            using (Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
+
+                //Check on useful
+                if(dto == null)
+                {
+                    return Content("That product does not exist.");
+                }
+
+                //Initialize model data
+                model = new ProductVM(dto);
+
+                //Create List of Categories
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+
+                //Get All Image from Galary
+                model.GalleryImages = Directory
+                        .EnumerateFiles(Server.MapPath("~/Images/Uploads/Products/" + id + "/Gallery/Thumbs"))
+                        .Select(fn => Path.GetFileName(fn));
+            }
+            //Return model in View
+
+            return View(model);
+        }
+
+        //Post:Admin/Shop/EditProduct/id
+        [HttpPost]
+        public ActionResult EditProduct(ProductVM model, HttpPostedFileBase imageForSave)
+        {
+            //Get id Product
+            int id = model.Id;
+            //Fill List Categories and Images
+            using(Db db = new Db())
+            {
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+            }
+            model.GalleryImages = Directory
+                       .EnumerateFiles(Server.MapPath("~/Images/Uploads/Products/" + id + "/Gallery/Thumbs"))
+                       .Select(fn => Path.GetFileName(fn));
+            //Check model on valid
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            //Check NameProduct on Unique
+            using(Db db = new Db())
+            {
+                if(db.Products.Where(x => x.Id != id).Any(x => x.Name == model.Name))
+                {
+                    ModelState.AddModelError("", "That product name is taken!");
+                    return View(model);
+                }
+            }
+
+            //Update Product
+            using(Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
+
+                dto.Name = model.Name;
+                dto.Slug = model.Name.Replace(" ","-").ToLower();
+                dto.Description = model.Description;
+                dto.Price = model.Price;
+                dto.CategoryId = model.CategoryId;
+                dto.ImageName = model.ImageName;
+                CategoryDTO catDTO = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
+                dto.CategoryName = catDTO.Name;
+
+                db.SaveChanges();
+            }
+
+            //Set message in TempData
+            TempData["SM"] = "You have edited the product!";
+            //Realize logic obrabotki Image
+            #region ImageUpload
+
+            #endregion
+
+            //Redirect User
+
+            return RedirectToAction("EditProduct");
+        }
     }
 }
