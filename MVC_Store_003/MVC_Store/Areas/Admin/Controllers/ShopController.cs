@@ -388,14 +388,99 @@ namespace MVC_Store.Areas.Admin.Controllers
 
             //Set message in TempData
             TempData["SM"] = "You have edited the product!";
+
             //Realize logic obrabotki Image
             #region ImageUpload
 
+            // Check upload file
+            if (imageForSave != null && imageForSave.ContentLength > 0)
+            {
+                //Get type of file
+                string ext = imageForSave.ContentType.ToLower();
+
+                //Check type file
+                if (ext != "image/jpg" &&
+                    ext != "image/jpeg" &&
+                    ext != "image/pjpg" &&
+                    ext != "image/gif" &&
+                    ext != "image/x-png" &&
+                    ext != "image/png")
+                {
+                    using (Db db = new Db())
+                    {
+                        ModelState.AddModelError("", "The image was not uploaded - wrong image extension!");
+                        return View(model);
+                    }
+                }
+
+                //Set path for load file
+                var originalDirectory = new DirectoryInfo(string.Format($"{Server.MapPath(@"\")}Images\\Uploads"));
+                var pathString1 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+                var pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Thumbs");
+
+                //Delete not useful files and directories
+                DirectoryInfo di1 = new DirectoryInfo(pathString1);
+                DirectoryInfo di2 = new DirectoryInfo(pathString2);
+
+                foreach(var file in di1.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach(var file in di2.GetFiles())
+                {
+                    file.Delete();
+                }
+                //Save image name
+                string imageName = imageForSave.FileName;
+                using(Db db = new Db())
+                {
+                    ProductDTO dto = db.Products.Find(id);
+                    dto.ImageName = imageName;
+
+                    db.SaveChanges();
+                }
+
+                //Save original and preview version
+                var path = string.Format($"{pathString1}\\{imageName}");
+                var path2 = string.Format($"{pathString2}\\{imageName}");
+
+                //Save original image
+                imageForSave.SaveAs(path);
+
+                //Create and save a small copy
+                WebImage img = new WebImage(imageForSave.InputStream);
+                img.Resize(200, 200);
+                img.Save(path2);
+
+            }
             #endregion
-
             //Redirect User
-
             return RedirectToAction("EditProduct");
+        }
+        
+        //Post:Admin/Shop/DeleteProduct/id
+        public ActionResult DeleteProduct(int id)
+        {
+            //Delete information about product in database
+            using(Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
+                db.Products.Remove(dto);
+                db.SaveChanges();
+            }
+
+            //Delite a directory product (image for product)
+            var originalDirectory = new DirectoryInfo(string.Format($"{Server.MapPath(@"\")}Images\\Uploads"));
+            var pathString = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+            if (Directory.Exists(pathString))
+            {
+                Directory.Delete(pathString,true);
+            }
+            TempData["SM"] = "You have deleted product!";
+
+            //Redirect user
+
+            return RedirectToAction("Products");
         }
     }
 }
