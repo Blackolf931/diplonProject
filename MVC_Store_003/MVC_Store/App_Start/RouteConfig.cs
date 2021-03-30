@@ -13,11 +13,24 @@ namespace MVC_Store
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute("Pages","{page}",
+                new { controller = "Pages", action = "Index" }
+               , new[] { "MVC_Store.Controllers" });
+
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            );
+                "Default", "",
+                new { controller = "Pages", action = "Index" },
+                new[] { "MVC_Store.Controllers" });
+
+            routes.MapRoute("PagesManuPartial", "Pages/PagesManuPartial",
+                new { controller = "Pages", action = "PagesManuPartial" }
+               , new[] { "MVC_Store.Controllers" });
+
+            /* routes.MapRoute(
+                 name: "Default",
+                 url: "{controller}/{action}/{id}",
+                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+             );*/
         }
     }
 }
