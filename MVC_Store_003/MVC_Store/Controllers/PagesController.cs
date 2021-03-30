@@ -22,9 +22,9 @@ namespace MVC_Store.Controllers
             PageVM model;
             PagesDTO dto;
             // Проверяем доступна ли страница
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
-                if(!db.Pages.Any(x => x.Slug.Equals(page)))
+                if (!db.Pages.Any(x => x.Slug.Equals(page)))
                 {
                     TempData["SM"] = "Page not found";
                     return RedirectToAction("Index", new { page = "" });
@@ -38,7 +38,7 @@ namespace MVC_Store.Controllers
             //Set a title page
             ViewBag.PageTitle = dto.Title;
             //Check sidebar on get
-            if(dto.HasSidebar == true)
+            if (dto.HasSidebar == true)
             {
                 ViewBag.Sidebar = "Yes";
             }
@@ -64,6 +64,21 @@ namespace MVC_Store.Controllers
             }
             //return частичное представление и List with data
             return PartialView("_PagesManuPartial", pageVMList);
+        }
+
+        public ActionResult SidebarPartial()
+        {
+            //Declare model
+            SidebarVM model;
+            //intialize the model
+            using(Db db = new Db())
+            {
+                SidebarDTO dto = db.Sidebars.Find(1);
+                model = new SidebarVM(dto);
+            }
+            //return model in View
+            return PartialView("_SidebarPartial",model);
+
         }
     }
 }
