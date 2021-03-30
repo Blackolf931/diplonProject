@@ -482,5 +482,50 @@ namespace MVC_Store.Areas.Admin.Controllers
 
             return RedirectToAction("Products");
         }
+
+        //Post:Admin/Shop/SaveGalleryImages/id
+        [HttpPost]
+        public void SaveGalleryImages(int id)
+        { //Перебрать все файлы полученные из представления
+            foreach (string fileName in Request.Files)
+            {
+                //Initialize this files
+                HttpPostedFileBase file = Request.Files[fileName];
+                //check on null
+                if (file != null & file.ContentLength > 0)
+                {
+                    //Set all path to Directories
+                    var originalDirectoty = new DirectoryInfo(string.Format($"{Server.MapPath(@"\")}Images\\Uploads"));
+                    string path1 = Path.Combine(originalDirectoty.ToString(), "Products\\" + id.ToString() + "\\Gallery");
+                    string path2 = Path.Combine(originalDirectoty.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+
+                    //Set Image path
+                    var path = string.Format($"{path1}\\{file.FileName}");
+                    var path3 = string.Format($"{path2}\\{file.FileName}");
+                    //Save original and small copy images
+                    file.SaveAs(path);
+
+                    WebImage img = new WebImage(file.InputStream);
+                    img.Resize(200, 200);
+                    img.Save(path3);
+                }
+            }
+        }
+
+        //Post:Admin/Shop/DeleteImage/id/imageName
+        [HttpPost]
+        public void DeleteImage(int id, string imageName)
+        {
+            string fullPath = Request.MapPath("~/Images/Uploads/Products/" + id.ToString() + "/Gallery/" + imageName);
+            string fullPath1 = Request.MapPath("~/Images/Uploads/Products/" + id.ToString() + "/Gallery/Thumbs/" + imageName);
+
+            if (System.IO.File.Exists(fullPath) && System.IO.File.Exists(fullPath1))
+            {
+                System.IO.File.Delete(fullPath);
+                System.IO.File.Delete(fullPath1);
+            }
+            TempData["SM"] = "You have deleted images from gallery";
+        }
+
     }
 }
