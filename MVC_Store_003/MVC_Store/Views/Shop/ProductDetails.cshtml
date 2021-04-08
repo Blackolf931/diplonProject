@@ -18,8 +18,6 @@
         <br />
         @Html.DisplayFor(model => model.Price) BLR
         <br />
-
-
         <div class="addtocart">
             <a href="#" class="addtocart btn-success">Add to Cart</a>
             <span class="loader">
@@ -37,11 +35,11 @@
     <div class="col-sm-12 fancyboxdiv"></div>
     <br /> <br />
     <div class="row">
-        @foreach(var item in Model.GalleryImages)
+        @foreach (var item in Model.GalleryImages)
         {
             <div class="col">
                 <a class="fancebox" rel="gallery1" href="/Images/Uploads/Products/@Model.Id/Gallery/@item">
-                    <img src="/Images/Uploads/Products/@Model.Id/Gallery/Thumbs/@item"/>
+                    <img src="/Images/Uploads/Products/@Model.Id/Gallery/Thumbs/@item" />
                 </a>
             </div>
         }
@@ -52,5 +50,32 @@
     <link href="~/Content/jquery.fancybox.css" rel="stylesheet" />
     <script src="~/Scripts/jquery.fancybox.js"></script>
     <script src="~/Content/ShopJS/ProductDetailsScript.js"></script>
+
+    <script>
+/********************Add to cart*********************/
+$(function () {
+    $("a.addtocart").click(function (e) {
+        e.preventDefault();
+
+        $("span.loader").addClass("ib");
+
+        var url = "/cart/AddToCartPartial";
+
+        $.get(url, { id: @Model.Id},
+            function myfunction(data) {
+        $(".ajaxcart").html(data);
+        }).done(function () {
+            $("span.loader").removeClass("ib");
+            $("div.ajaxmsg").addClass("ib");
+
+            setTimeout(function () {
+                $("div.ajaxmsg").fadeOut("fast");
+                $("div.ajaxmsg").removeClass("ib");
+            }, 2000);
+        });
+    });
+});
+/****************************************************/
+    </script>
 }
 

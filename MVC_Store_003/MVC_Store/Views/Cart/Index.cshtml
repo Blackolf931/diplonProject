@@ -1,0 +1,86 @@
+﻿@model IEnumerable<MVC_Store.Models.ViewModels.Cart.CartVM>
+
+@{
+    ViewBag.Title = "Cart Shop";
+}
+
+<h2>Cart Shop</h2>
+
+@if (ViewBag.Message != null)
+{
+    <h3>@ViewBag.Message</h3>
+}
+else
+{
+
+
+
+
+    <table class="table">
+        <tr>
+            <th>
+                ProductName
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Image
+            </th>
+
+            <th> <!--Для кнопок изменить кол-во и удалить--></th>
+
+            <th>
+                Total
+            </th>
+
+
+            <th></th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td class="qty@(item.ProductId)">
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) BLR
+                </td>
+                <td>
+                    <img src="/Images/Uploads/Products/@item.ProductId/Thumbs/@item.Image" />
+                </td>
+                <!--Вставить картинки вместо знаков-->
+                <td>
+                    <a href="#" class="incproduct" data-id="@item.ProductId"> + </a>
+                    <a href="#" class="decproduct" data-id="@item.ProductId"> - </a>
+                    <a href="#" class="removeproduct" data-id="@item.ProductId"> X </a>
+                </td>
+                <td class="total@(item.ProductId)">
+                    @Html.DisplayFor(modelItem => item.Total)BLR
+                </td>
+
+            </tr>
+        }
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="grandtotal"><b>Grand total: </b><span>@ViewBag.FinishTotal BLR</span></td>
+        </tr>
+
+    </table>
+}
+
+@section Scripts{
+    <script src="~/Content/ShopJS/IncrementProductScript.js"></script>
+}
