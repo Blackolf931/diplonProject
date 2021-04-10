@@ -143,5 +143,45 @@ namespace MVC_Store.Controllers
             }
         }
 
+        //GET: /cart/DecrementProduct
+        public JsonResult DecrementProduct(int productId)
+        {
+            List<CartVM> cart = Session["cart"] as List<CartVM>;
+
+            using (Db db = new Db())
+            {
+                //Get the model from a List
+
+                CartVM model = cart.FirstOrDefault(x => x.ProductId == productId);
+
+                //Decrement quantity
+                if(model.Quantity > 1)
+                {
+                    model.Quantity--;
+                }
+                else
+                {
+                    model.Quantity = 0;
+                    cart.Remove(model);
+                }
+
+                //Save need data
+                var result = new { qty = model.Quantity, price = model.Price };
+                //return JSOn with data
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public void RemoveProduct(int productId)
+        {
+            List<CartVM> cart = Session["cart"] as List<CartVM>;
+
+            using (Db db = new Db())
+            {
+                CartVM model = cart.FirstOrDefault(x => x.ProductId == productId);
+
+                cart.Remove(model);
+            }
+        }
     }
 }
