@@ -8,13 +8,13 @@ using System.Web;
 
 namespace MVC_Store.Models.ViewModels.Account
 {
-    public class UserVM
+    public class UserProfileVM
     {
-        public UserVM()
+        public UserProfileVM()
         {
         }
 
-        public UserVM(UserDTO row)
+        public UserProfileVM(UserDTO row)
         {
             Id = row.Id;
             FirstName = row.FirstName;
@@ -25,7 +25,6 @@ namespace MVC_Store.Models.ViewModels.Account
             UserName = row.UserName;
             Password = row.Password;
         }
-
         public int Id { get; set; }
         [Required]
         [DisplayName("First Name")]
@@ -47,9 +46,7 @@ namespace MVC_Store.Models.ViewModels.Account
         [Required]
         [DisplayName("User Name")]
         public string UserName { get; set; }
-        [Required]
         public string Password { get; set; }
-        [Required]
         [DisplayName("Confirm Password")]
         public string ConfirmPassword { get; set; }
     }
