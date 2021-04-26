@@ -182,6 +182,8 @@ namespace MVC_Store.Controllers
         [ActionName("user-profile")]
         public ActionResult UserProfile(UserProfileVM model)
         {
+            bool userNameISChanged = false;
+
             //Check model on Valid
             if (!ModelState.IsValid)
             {
@@ -200,6 +202,11 @@ namespace MVC_Store.Controllers
             {
                 //Get name user 
                 string userName = User.Identity.Name;
+                if (userName != model.UserName)
+                {
+                    userName = model.UserName;
+                    userNameISChanged = true;
+                }
                 //Check name on Unique
                 if(db.Users.Where(x => x.Id != model.Id).Any(x => x.UserName == userName))
                 {
@@ -224,7 +231,14 @@ namespace MVC_Store.Controllers
             //Set SM
             TempData["SM"] = "You have edited you profile!";
 
-            return View("UserProfile", model);
+            if (!userNameISChanged)
+            {
+                return View("UserProfile", model);
+            }
+            else
+            {
+                return RedirectToAction("Logout");
+            }
         }
 
     }

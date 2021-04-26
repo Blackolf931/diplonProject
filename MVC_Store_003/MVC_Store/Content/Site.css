@@ -78,3 +78,21 @@ span.loader {
 .ib {
     display: inline-block !important
 }
+.ajaxbg{
+    position: absolute;
+    width: 100%;
+    background: white;
+    display: none;
+}
+.ajaxbg span{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: matrix3d(-50%, -50%, 0)
+}
+
+.form.paypalform{
+    position: absolute;
+    left: -2000px;
+}
+

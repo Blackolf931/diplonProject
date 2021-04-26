@@ -22,13 +22,13 @@
 
                 @if (Request.IsAuthenticated)
                 {
-                  <li>@Html.ActionLink("Logout", "Logout", "Account", null, new {@class = "navbar-text", style="text-decoration:none" })</li>
+                    <li>@Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "navbar-text", style = "text-decoration:none" })</li>
                 }
                 else
                 {
-                    if (ViewBag.Title == "Login") 
+                    if (ViewBag.Title == "Login")
                     {
-                        <li class="navbar-text">@Html.ActionLink("Login","Login","Account", null, new { @class = "active", style="text-decoration:none"})</li>
+                        <li class="navbar-text">@Html.ActionLink("Login", "Login", "Account", null, new { @class = "active", style = "text-decoration:none" })</li>
                     }
                     else
                     {
@@ -36,14 +36,33 @@
                     }
                 }
 
-                @if (Request.IsAuthenticated)
+                @if (Request.IsAuthenticated && User.IsInRole("User"))
                 {
-                    <li>@Html.Action("UserNavPartial","Account",new {area = ""})</li>
+                    if (ViewBag.Title == "User Profile")
+                    {
+                        <li class="active">@Html.Action("UserNavPartial", "Account", new { area = "" })</li>
+                    }
+                    else
+                    {
+                        <li>@Html.Action("UserNavPartial", "Account", new { area = "" })</li>
+                    }
                 }
             </ul>
-            <span class="navbar-text">
-                @Html.Action("CartPartial","Cart")
-            </span>
+            @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                <span class="navbar-text">
+                    @Html.ActionLink("Admin Area", "Index", "Dashboard", new { area = "Admin" }, null)
+                </span>
+            }
+            else
+            {
+                if (ViewBag.Title != "Cart Shop")
+                {
+                    <span class="navbar-text">
+                        @Html.Action("CartPartial", "Cart")
+                    </span>
+                }
+            }
 
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
