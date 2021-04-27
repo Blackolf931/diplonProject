@@ -11,9 +11,7 @@ namespace MVC_Store.Models.Data
     public class OrderDTO
     {
         [Key]
-
-        ///Может быть ошибка в этом поле Id (OrderId)
-        public int Id { get; set; }
+        public int OrderId { get; set; }
         public int UserId { get; set; }
         public DateTime CreatedAt { get; set; }
 

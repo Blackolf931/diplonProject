@@ -3,6 +3,8 @@ using MVC_Store.Models.ViewModels.Cart;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -182,6 +184,65 @@ namespace MVC_Store.Controllers
 
                 cart.Remove(model);
             }
+        }
+
+        public ActionResult PaypalPartial()
+        {
+            // get list of products in cart
+            List<CartVM> cart = Session["cart"] as List<CartVM>;
+
+            //return partial view with list
+            return PartialView(cart);
+        }
+
+        //POST: /cart/PlaceOrder
+        [HttpPost]
+        public void PlaceOrder()
+        {
+            List<CartVM> cart = Session["cart"] as List<CartVM>;
+
+            string userName = User.Identity.Name;
+
+            int orderId = 0;
+
+            using(Db db = new Db())
+            {
+                OrderDTO orderDto = new OrderDTO();
+
+                var q = db.Users.FirstOrDefault(x => x.UserName == userName);
+
+                int userId = q.Id;
+
+                orderDto.UserId = userId;
+
+                orderDto.CreatedAt = DateTime.Now;
+                
+                db.Orders.Add(orderDto);
+
+                db.SaveChanges();
+
+                orderId = orderDto.OrderId;
+
+                OrderDetailsDTO orderDetailsDto = new OrderDetailsDTO();
+                
+                foreach(var el in cart)
+                {
+                    orderDetailsDto.OrderId = orderId;
+                    orderDetailsDto.UserId = userId;
+                    orderDetailsDto.ProductId = el.ProductId;
+                    orderDetailsDto.Quantity = el.Quantity;
+
+                    db.OrderDetails.Add(orderDetailsDto);
+                    db.SaveChanges();
+                }
+            }
+            var client = new SmtpClient("smtp.mailtrap.io", 2525)
+            {
+                Credentials = new NetworkCredential("a22ef42155c7ec", "393e4c06b7ae69"),
+                EnableSsl = true
+            };
+            client.Send("shop@example.com", "admin@example.com", "New Order", $"You have a new order. Order number: {orderId}");
+            Session["cart"] = null;
         }
     }
 }
