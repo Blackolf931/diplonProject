@@ -25,6 +25,11 @@ namespace MVC_Store.Models.Data
 
         public string ImageName { get; set; }
 
+        public int SuplierId { get; set; }
+
+        [ForeignKey("SuplierId")]
+        public virtual UserDTO Suplier { get; set; }
+
         [ForeignKey("CategoryId")]
         public virtual CategoryDTO Category { get; set; }
 

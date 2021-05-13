@@ -13,7 +13,7 @@ $(function () {
                 $("td.qty" + productId).html(data.qty);
 
                 var price = data.qty * data.price;
-                var priceHtml = "BLR" + price.toFixed(2);
+                var priceHtml = price.toFixed(2) + "$";
 
                 $("td.total" + productId).html(priceHtml);
 
@@ -56,7 +56,7 @@ $(function () {
                         $("td.qty" + productId).html(data.qty);
 
                         var price = data.qty * data.price;
-                        var priceHtml = "BLR" + price.toFixed(2);
+                        var priceHtml = price.toFixed(2) + "$";
 
                         $("td.total" + productId).html(priceHtml);
 

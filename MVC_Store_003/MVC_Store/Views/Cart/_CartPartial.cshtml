@@ -5,7 +5,7 @@
         @if(@Model.Quantity == 1) 
         {
         <div>
-            Your cart: @Model.ProductName - @Model.Quantity item - @Model.Price BLR
+            Your cart: @Model.ProductName - @Model.Quantity item - @Model.Price $
         </div>
         }
         else if (Model.Quantity == 0)
@@ -17,11 +17,9 @@
         else
         {
     <div>
-        Your cart: @Model.ProductName - @Model.Quantity items - @Model.Price BLR
+        Your cart: @Model.ProductName - @Model.Quantity items - @Model.Price $
 
     </div>
     }
-
-        <br />
         @Html.ActionLink("Checkout", "Index")
 </div>

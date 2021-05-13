@@ -1,10 +1,9 @@
 ﻿using MVC_Store.Models.Data;
 using MVC_Store.Models.ViewModels.Shop;
-using System;
+using PagedList;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MVC_Store.Controllers
@@ -14,8 +13,39 @@ namespace MVC_Store.Controllers
         // GET: Shop
         public ActionResult Index()
         {
-            return RedirectToAction("index", "Pages");
+           return RedirectToAction("Index", "Pages");
         }
+
+        public ActionResult SearchData(string searchString)
+        {
+            var pageNumber = 1;
+            List<ProductVM> productVMList = new List<ProductVM>();
+            if (searchString == null)
+            {
+                using (Db db = new Db())
+                {
+                    productVMList = db.Products.ToArray().Select(x => new ProductVM(x)).ToList();
+                    ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                }
+                var onePageOfProducts = productVMList.ToPagedList(pageNumber, 6);
+                ViewBag.onePageOfProducts = onePageOfProducts;
+                productVMList = null;
+                return View(productVMList);
+            }
+            else
+            {
+                using (Db db = new Db())
+                {
+                    productVMList = db.Products.ToArray().Where(x => x.Description == searchString || x.CategoryName == searchString
+                    || x.Slug == searchString || x.Name == searchString).Select(x => new ProductVM(x)).ToList();
+                    ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                }
+                var onePageOfProducts = productVMList.ToPagedList(pageNumber, 6);
+                ViewBag.onePageOfProducts = onePageOfProducts;
+                return View(productVMList);
+            }
+        }
+
         public ActionResult CategoryMenuPartial()
         {
             // Decalre model of type CategoryVM
@@ -29,11 +59,42 @@ namespace MVC_Store.Controllers
             //return View with model
             return PartialView("_CategoryMenuPartial", categoryVMList);
         }
-        //GET: Shop/Category/name
 
-            //Get Category
-        public ActionResult Category(string name)
+        public ActionResult Price(int? page)
         {
+            var pageNumber = page ?? 1;
+            List<ProductVM> productVMList;
+
+            using(Db db = new Db())
+            {
+                productVMList = db.Products.ToArray().OrderBy(x => x.Price).Select(x => new ProductVM(x)).ToList(); 
+                ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+            }
+            var onePageOfProducts = productVMList.ToPagedList(pageNumber, 6);
+            ViewBag.onePageOfProducts = onePageOfProducts;
+            return View(productVMList);
+        }
+        public ActionResult SortOfPriceDec(int? page)
+        {
+            var pageNumber = page ?? 1;
+            List<ProductVM> productVMList;
+
+            using(Db db = new Db())
+            {
+                productVMList = db.Products.ToArray().OrderBy(x => x.Price).Select(x => new ProductVM(x)).ToList();
+                ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+            }
+            productVMList.Reverse();
+            var onePageOfProducts = productVMList.ToPagedList(pageNumber, 6);
+            ViewBag.onePageOfProducts = onePageOfProducts;
+            return View(productVMList);
+        }
+
+        //GET: Shop/Category/name
+        //Get Category
+        public ActionResult Category(string name, int? page)
+        {
+            var pageNumber = page ?? 1;
             //Declare List of tupe List<>
             List<ProductVM> productVMList;
             //Get idCategory
@@ -45,8 +106,11 @@ namespace MVC_Store.Controllers
                 productVMList = db.Products.ToArray().Where(x => x.CategoryId == catId).Select(x => new ProductVM(x)).ToList();
                 //Get a name category
                 var productCat = db.Products.Where(x => x.CategoryId == catId).FirstOrDefault();
+                ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                //Set chose a category
+                ViewBag.SelectedCat = catId.ToString();
                 //Check on null
-                if(productCat == null)
+                if (productCat == null)
                 {
                     var catName = db.Categories.Where(x => x.Slug == name).Select(x => x.Name).FirstOrDefault();
                     ViewBag.CategoryName = catName;
@@ -56,6 +120,8 @@ namespace MVC_Store.Controllers
                     ViewBag.CategoryName = productCat.CategoryName;
                 }
             }
+            var onePageOfProducts = productVMList.ToPagedList(pageNumber, 6);
+            ViewBag.onePageOfProducts = onePageOfProducts;
             //return Vm with model
             return View(productVMList);
         }
@@ -64,7 +130,6 @@ namespace MVC_Store.Controllers
         [ActionName("product-details")]
         public ActionResult ProductDetails(string name)
         {
-
             //Declare DTO and VM
             ProductDTO dto;
             ProductVM model;
@@ -96,5 +161,21 @@ namespace MVC_Store.Controllers
             //Return the model in VM
             return View("ProductDetails", model);
         }
+
+        public ActionResult GetAllProduct(int? page)
+        {
+            var pageNumber = 1;
+            List<ProductVM> productVMList = new List<ProductVM>();
+
+                using (Db db = new Db())
+                {
+                    productVMList = db.Products.ToArray().Select(x => new ProductVM(x)).ToList();
+                ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+            }
+            var onePageOfProducts = productVMList.ToPagedList(pageNumber, 6);
+            ViewBag.onePageOfProducts = onePageOfProducts;
+            return View(productVMList);
+            }
+
     }
 }

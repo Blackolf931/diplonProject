@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MVC_Store.Areas.Suplier.Models.ViewModels.WayBillVM>
+
+@{
+    ViewBag.Title = "GetWayBill";
+}
+
+<h2>GetWayBill</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProviderName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Payer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Base)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocumentNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TheCargoWasRealesed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProviderName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Payer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Base)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocumentNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TheCargoWasRealesed)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdWayBill }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdWayBill }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdWayBill })
+        </td>
+    </tr>
+}
+
+</table>

@@ -55,7 +55,7 @@ else
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price) BLR
+                    @Html.DisplayFor(modelItem => item.Price) $
                 </td>
                 <td>
                     <img src="/Images/Uploads/Products/@item.ProductId/Thumbs/@item.Image" />
@@ -67,7 +67,7 @@ else
                     <a href="#" class="removeproduct" data-id="@item.ProductId"> X </a>
                 </td>
                 <td class="total@(item.ProductId)">
-                    @Html.DisplayFor(modelItem => item.Total)BLR
+                    @Html.DisplayFor(modelItem => item.Total) $
                 </td>
 
             </tr>
@@ -80,7 +80,7 @@ else
             <td></td>
             <td></td>
             <td></td>
-            <td class="grandtotal"><b>Grand total: </b><span>@ViewBag.FinishTotal BLR</span></td>
+            <td class="grandtotal"><b>Grand total: </b><span>@ViewBag.FinishTotal $</span></td>
         </tr>
 
     </table>

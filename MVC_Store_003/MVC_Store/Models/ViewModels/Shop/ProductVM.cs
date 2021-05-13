@@ -26,6 +26,7 @@ namespace MVC_Store.Models.ViewModels.Shop
             CategoryName = row.CategoryName;
             CategoryId = row.CategoryId;
             ImageName = row.ImageName;
+            SuplierId = row.SuplierId;
         }
 
         public int Id { get; set; }
@@ -43,7 +44,10 @@ namespace MVC_Store.Models.ViewModels.Shop
         public int CategoryId { get; set; }
         [DisplayName("Image")]
         public string ImageName { get; set; }
+        public int SuplierId { get; set; }
 
+        public IEnumerable<SelectListItem> Supliers { get; set; }
+ 
         public IEnumerable<SelectListItem> Categories { get; set; }
 
         public IEnumerable<string> GalleryImages { get; set; }

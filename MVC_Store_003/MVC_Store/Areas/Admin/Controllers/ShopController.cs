@@ -1,4 +1,6 @@
-﻿using MVC_Store.Models.Data;
+﻿using MVC_Store.Areas.Admin.Models.ViewModels.Shop;
+using MVC_Store.Models.Data;
+using MVC_Store.Models.ViewModels.Account;
 using MVC_Store.Models.ViewModels.Shop;
 using PagedList;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Web.Mvc;
 
 namespace MVC_Store.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ShopController : Controller
     {
         // GET: Admin/Shop
@@ -20,7 +23,6 @@ namespace MVC_Store.Areas.Admin.Controllers
 
             using (Db db = new Db())
             {
-
                 //intialize the model with data 
                 categoryVMList = db.Categories.ToArray()
                     .OrderBy(x => x.Sorting)
@@ -132,16 +134,45 @@ namespace MVC_Store.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult AddProduct()
         {
+            List<int> supliersId;
+
+            using(Db db = new Db())
+            {
+                supliersId = db.UserRoles.ToArray().Where(x => x.RoleId == 3).Select(x => x.UserId).ToList();
+            }
+
             //Initialize model
             ProductVM model = new ProductVM();
 
             using(Db db = new Db())
             {
                 //add list category from database in model
-                model.Categories = new SelectList(db.Categories.ToList(), "id", "Name");
+                model.Categories = new SelectList(db.Categories.ToList(), "id", "Name");    
             }
+            model.Supliers = new SelectList(GetSuplierId(supliersId), "Id", "FirstName", "LastName");
             //return model in VM
             return View(model);
+        }
+
+        private List<UserDTO> GetSuplierId(List<int> supliersId)
+        {
+            List<UserDTO> users;
+            List<UserDTO> secondUserList = new List<UserDTO>();
+            using(Db db = new Db())
+            {
+                users = db.Users.ToList();
+            }
+            for (int i =0; i < supliersId.Count; i++)
+            {
+                for (int j=0; j < users.Count; j++)
+                {
+                    if(supliersId[i] == users[j].Id)
+                    {
+                        secondUserList.Add(users[j]);
+                    }
+                }
+            }
+            return secondUserList;
         }
 
         //Create method for add products
@@ -155,6 +186,7 @@ namespace MVC_Store.Areas.Admin.Controllers
                 using (Db db = new Db())
                 {
                     model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                    model.Supliers = new SelectList(db.Users.ToList(), "Id", "FirstName");
                     return View(model);
                 }
             }
@@ -183,6 +215,7 @@ namespace MVC_Store.Areas.Admin.Controllers
                 dto.Description = model.Description;
                 dto.Price = model.Price;
                 dto.CategoryId = model.CategoryId;
+                dto.SuplierId = model.SuplierId;
 
                 CategoryDTO catDTO = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
                 //Внимательно посмотреть имена если нужно CategoryName
@@ -280,7 +313,7 @@ namespace MVC_Store.Areas.Admin.Controllers
 
         [HttpGet]
 
-        public ActionResult Products(int? page, int? catId)
+        public ActionResult Products(int? page, int? catId, int? suplierId)
         {
             // Declare ProductVM of type List
             List<ProductVM> listOfProductVM;
@@ -295,12 +328,16 @@ namespace MVC_Store.Areas.Admin.Controllers
                      .Select(x => new ProductVM(x)).ToList();
                 //Fill Category list
                 ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+
+                ViewBag.Supliers = new SelectList(db.Users.ToList(), "Id", "FirstName");
+
+                ViewBag.SuplierId = suplierId.ToString();
                 //Set chose a category
                 ViewBag.SelectedCat = catId.ToString();
             }
             //Set Navigation for pages
             //Цифра меняет количество товаров на страницы
-            var onePageOfProducts = listOfProductVM.ToPagedList(pageNumber, 3);
+            var onePageOfProducts = listOfProductVM.ToPagedList(pageNumber, 6);
             ViewBag.onePageOfProducts = onePageOfProducts;
             // return VM with data
             return View(listOfProductVM);
@@ -525,6 +562,51 @@ namespace MVC_Store.Areas.Admin.Controllers
                 System.IO.File.Delete(fullPath1);
             }
             TempData["SM"] = "You have deleted images from gallery";
+        }
+
+        public ActionResult Orders()
+        {
+            List<OrdersForAdminVM> ordersForAdmin = new List<OrdersForAdminVM>();
+            using(Db db = new Db())
+            {
+                List<OrderVM> orders = db.Orders.ToArray().Select(x => new OrderVM(x)).ToList();
+
+                foreach(var el in orders)
+                {
+                    Dictionary<string, int> productAndQty = new Dictionary<string, int>();
+
+                    decimal total = 0m;
+
+                    List<OrderDetailsDTO> orderDetailsList = db.OrderDetails.Where(x => x.OrderId == el.OrderId).ToList();
+
+                    UserDTO user = db.Users.FirstOrDefault(x => x.Id == el.UserId);
+
+                    string userName = user.UserName;
+
+                    foreach(var item in orderDetailsList)
+                    {
+                        ProductDTO product = db.Products.FirstOrDefault(x => x.Id == item.ProductId);
+
+                        decimal price = product.Price;
+
+                        string productName = product.Name;
+
+                        productAndQty.Add(productName, item.Quantity);
+
+                        total += item.Quantity * price;
+                    }
+                    ordersForAdmin.Add(new OrdersForAdminVM()
+                    {
+                        OrderNumber = el.OrderId,
+                        UserName = userName,
+                        Total = total, 
+                        ProductsAndQuantity = productAndQty,
+                        CreatedAt = el.CreatedAt
+                    });
+
+                }
+            }
+            return View(ordersForAdmin);
         }
 
     }
