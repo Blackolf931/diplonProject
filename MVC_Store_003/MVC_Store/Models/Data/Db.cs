@@ -18,5 +18,8 @@ namespace MVC_Store.Models.Data
         public DbSet<OrderDTO> Orders { get; set; }
         public DbSet<OrderDetailsDTO> OrderDetails { get; set; }
         public DbSet<WayBillDTO> WayBill { get; set; }
+
+        public DbSet<ProductInWayBillDTO> ProductInWayBillDTO { get; set; }
+    //    public DbSet<ProductInWayBillDTO> ProductInWayBill { get; set; }
     }
 }

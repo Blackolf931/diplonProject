@@ -99,7 +99,7 @@
                 && ViewBag.Title != "User Profile")
             {
                 <h4>Сортировка по цене:&nbsp;&nbsp;</h4>
- 
+                @Html.ActionLink("Create WayBill", "CreateWayBill", "Suplier", null, new { @class = "navbar-text", style = "text-decoration:none" })
                 @Html.ActionLink("По возрастанию", "Price", "Shop", new { @class = "btn btn-info" })
                 @Html.ActionLink("По убыванию", "SortOfPriceDec", "Shop", new { @class = "btn btn-info", style = "margin-left: 15px" })
             }

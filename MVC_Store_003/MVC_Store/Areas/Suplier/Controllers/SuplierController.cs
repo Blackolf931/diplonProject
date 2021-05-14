@@ -1,8 +1,6 @@
-﻿
-
-using MVC_Store.Areas.Suplier.Models.ViewModels;
-using MVC_Store.Models.Data;
+﻿using MVC_Store.Models.Data;
 using MVC_Store.Models.ViewModels.Shop;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -170,6 +168,105 @@ namespace MVC_Store.Areas.Suplier.Controllers
             }
             //return model in VM
             return View(wayBillVm);
+        }
+
+        [HttpGet]
+        public ActionResult CreateWayBill()
+        {
+            //Initialize model
+            WayBillVM model = new WayBillVM();
+
+            using (Db db = new Db())
+            {
+                //add list category from database in model
+                model.ProductsInWayBill = new SelectList(db.Products.ToList(), "id", "Name");
+            }
+            //return model in VM
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CreateWayBill(WayBillVM model, int[] IdProductInWayBill)
+        {
+            //Check the model for Valid
+            if (!ModelState.IsValid)
+            {
+                using (Db db = new Db())
+                {
+                    model.ProductsInWayBill = new SelectList(db.Products.ToList(), "Id", "Name");
+                    return View(model);
+                }
+            }
+            if (IdProductInWayBill.Length <= 0)
+            {
+                ModelState.AddModelError("", "You should choice a one products!");
+                return View(model);
+            }
+
+            //Check a name product for unique
+
+            using (Db db = new Db())
+            {
+               if (db.WayBill.Any(x => x.DocumentNumber == model.DocumentNumber))
+                {
+                    model.ProductsInWayBill = new SelectList(db.Products.ToList(), "Id", "Name");
+                    ModelState.AddModelError("", "That document number is taken!");
+                    return View(model);
+                }
+            }
+            List<WayBillVM> wayBillVm;
+            using (Db db = new Db())
+            {
+                wayBillVm = db.WayBill.ToArray().Select(x => new WayBillVM(x)).ToList();
+            }
+            //declare param ProductDTO
+            int id = 0;
+            for (int i = 0; i < IdProductInWayBill.Length; i++) 
+            {
+                id = 0;
+                id = AddProductInWayBill(wayBillVm, IdProductInWayBill[i]);
+            }
+
+
+
+            //Initialize and save model based ProductDTO
+            using (Db db = new Db())
+            {
+                WayBillDTO dto = new WayBillDTO();
+
+                dto.Base = model.Base;
+                dto.CreatedAt = DateTime.Now;
+                dto.DocumentNumber = id;
+                dto.Payer = model.Payer;
+                dto.ProviderName = model.ProviderName;
+                dto.RecipientName = model.RecipientName;
+                dto.TheCargoWasRealesed = model.RecipientName;
+                dto.IdProductInWayBill = 0;
+
+                db.WayBill.Add(dto);
+                db.SaveChanges();
+               // id = dto.Id;
+            }
+
+            //Add message to TempData
+            TempData["SM"] = "You have created a WayBill!";
+
+            // Redirect user*/
+            return RedirectToAction("CreateWayBill");
+        }
+        private int AddProductInWayBill(List<WayBillVM> wayBillVm, int id)
+        {
+            using (Db db = new Db())
+            {
+                ProductInWayBillDTO dto = new ProductInWayBillDTO();
+                id = wayBillVm[wayBillVm.Count-1].IdWayBill +1;
+                dto.IdWayBill = id;
+                dto.CountProduct = 1;
+                dto.IdProduct = id;
+                db.ProductInWayBillDTO.Add(dto);
+                db.SaveChanges();
+            }
+            return id;
         }
     }
 }
