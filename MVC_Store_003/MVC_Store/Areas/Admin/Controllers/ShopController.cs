@@ -3,12 +3,15 @@ using MVC_Store.Models.Data;
 using MVC_Store.Models.ViewModels.Account;
 using MVC_Store.Models.ViewModels.Shop;
 using PagedList;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace MVC_Store.Areas.Admin.Controllers
 {
@@ -34,14 +37,14 @@ namespace MVC_Store.Areas.Admin.Controllers
             return View(categoryVMList);
         }
 
-         //Post: Admin/Sho/AddNewCategory 
-         [HttpPost]
+        //Post: Admin/Sho/AddNewCategory 
+        [HttpPost]
         public string AddNewCategory(string catName)
         {
             // Declare a new param ID
             string id;
-            
-            using(Db db = new Db())
+
+            using (Db db = new Db())
             {
                 //Check NameCategory on Unique
                 if (db.Categories.Any(x => x.Name == catName))
@@ -110,7 +113,7 @@ namespace MVC_Store.Areas.Admin.Controllers
             using (Db db = new Db())
             {
                 // Check a name category on the unique
-                if(db.Categories.Any(x => x.Name == newCatName))
+                if (db.Categories.Any(x => x.Name == newCatName))
                 {
                     return "titletaken";
                 }
@@ -136,7 +139,7 @@ namespace MVC_Store.Areas.Admin.Controllers
         {
             List<int> supliersId;
 
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 supliersId = db.UserRoles.ToArray().Where(x => x.RoleId == 3).Select(x => x.UserId).ToList();
             }
@@ -144,10 +147,10 @@ namespace MVC_Store.Areas.Admin.Controllers
             //Initialize model
             ProductVM model = new ProductVM();
 
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 //add list category from database in model
-                model.Categories = new SelectList(db.Categories.ToList(), "id", "Name");    
+                model.Categories = new SelectList(db.Categories.ToList(), "id", "Name");
             }
             model.Supliers = new SelectList(GetSuplierId(supliersId), "Id", "FirstName", "LastName");
             //return model in VM
@@ -158,15 +161,15 @@ namespace MVC_Store.Areas.Admin.Controllers
         {
             List<UserDTO> users;
             List<UserDTO> secondUserList = new List<UserDTO>();
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 users = db.Users.ToList();
             }
-            for (int i =0; i < supliersId.Count; i++)
+            for (int i = 0; i < supliersId.Count; i++)
             {
-                for (int j=0; j < users.Count; j++)
+                for (int j = 0; j < users.Count; j++)
                 {
-                    if(supliersId[i] == users[j].Id)
+                    if (supliersId[i] == users[j].Id)
                     {
                         secondUserList.Add(users[j]);
                     }
@@ -296,12 +299,12 @@ namespace MVC_Store.Areas.Admin.Controllers
 
                 //Create and save a small copy
                 WebImage img = new WebImage(imageForSave.InputStream);
-                img.Resize(200, 200).Crop(1,1);
+                img.Resize(200, 200).Crop(1, 1);
                 img.Save(path2);
 
             }
             #endregion
-          
+
             // Redirect user
             return RedirectToAction("AddProduct");
 
@@ -319,10 +322,10 @@ namespace MVC_Store.Areas.Admin.Controllers
             List<ProductVM> listOfProductVM;
             //Set number of page
             var pageNumber = page ?? 1;
-            
+
             using (Db db = new Db())
             {//Intialize ProductVM and fill data
-               
+
                 listOfProductVM = db.Products.ToArray()
                      .Where(x => catId == null || catId == 0 || x.CategoryId == catId)
                      .Select(x => new ProductVM(x)).ToList();
@@ -355,7 +358,7 @@ namespace MVC_Store.Areas.Admin.Controllers
                 ProductDTO dto = db.Products.Find(id);
 
                 //Check on useful
-                if(dto == null)
+                if (dto == null)
                 {
                     return Content("That product does not exist.");
                 }
@@ -383,7 +386,7 @@ namespace MVC_Store.Areas.Admin.Controllers
             //Get id Product
             int id = model.Id;
             //Fill List Categories and Images
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
             }
@@ -397,9 +400,9 @@ namespace MVC_Store.Areas.Admin.Controllers
             }
 
             //Check NameProduct on Unique
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
-                if(db.Products.Where(x => x.Id != id).Any(x => x.Name == model.Name))
+                if (db.Products.Where(x => x.Id != id).Any(x => x.Name == model.Name))
                 {
                     ModelState.AddModelError("", "That product name is taken!");
                     return View(model);
@@ -407,12 +410,12 @@ namespace MVC_Store.Areas.Admin.Controllers
             }
 
             //Update Product
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 ProductDTO dto = db.Products.Find(id);
 
                 dto.Name = model.Name;
-                dto.Slug = model.Name.Replace(" ","-").ToLower();
+                dto.Slug = model.Name.Replace(" ", "-").ToLower();
                 dto.Description = model.Description;
                 dto.Price = model.Price;
                 dto.CategoryId = model.CategoryId;
@@ -459,17 +462,17 @@ namespace MVC_Store.Areas.Admin.Controllers
                 DirectoryInfo di1 = new DirectoryInfo(pathString1);
                 DirectoryInfo di2 = new DirectoryInfo(pathString2);
 
-                foreach(var file in di1.GetFiles())
+                foreach (var file in di1.GetFiles())
                 {
                     file.Delete();
                 }
-                foreach(var file in di2.GetFiles())
+                foreach (var file in di2.GetFiles())
                 {
                     file.Delete();
                 }
                 //Save image name
                 string imageName = imageForSave.FileName;
-                using(Db db = new Db())
+                using (Db db = new Db())
                 {
                     ProductDTO dto = db.Products.Find(id);
                     dto.ImageName = imageName;
@@ -486,7 +489,7 @@ namespace MVC_Store.Areas.Admin.Controllers
 
                 //Create and save a small copy
                 WebImage img = new WebImage(imageForSave.InputStream);
-                img.Resize(200, 200).Crop(1,1);
+                img.Resize(200, 200).Crop(1, 1);
                 img.Save(path2);
 
             }
@@ -494,12 +497,12 @@ namespace MVC_Store.Areas.Admin.Controllers
             //Redirect User
             return RedirectToAction("EditProduct");
         }
-        
+
         //Post:Admin/Shop/DeleteProduct/id
         public ActionResult DeleteProduct(int id)
         {
             //Delete information about product in database
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 ProductDTO dto = db.Products.Find(id);
                 db.Products.Remove(dto);
@@ -511,7 +514,7 @@ namespace MVC_Store.Areas.Admin.Controllers
             var pathString = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
             if (Directory.Exists(pathString))
             {
-                Directory.Delete(pathString,true);
+                Directory.Delete(pathString, true);
             }
             TempData["SM"] = "You have deleted product!";
 
@@ -543,7 +546,7 @@ namespace MVC_Store.Areas.Admin.Controllers
                     file.SaveAs(path);
 
                     WebImage img = new WebImage(file.InputStream);
-                    img.Resize(200, 200).Crop(1,1);
+                    img.Resize(200, 200).Crop(1, 1);
                     img.Save(path3);
                 }
             }
@@ -567,11 +570,11 @@ namespace MVC_Store.Areas.Admin.Controllers
         public ActionResult Orders()
         {
             List<OrdersForAdminVM> ordersForAdmin = new List<OrdersForAdminVM>();
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 List<OrderVM> orders = db.Orders.ToArray().Select(x => new OrderVM(x)).ToList();
 
-                foreach(var el in orders)
+                foreach (var el in orders)
                 {
                     Dictionary<string, int> productAndQty = new Dictionary<string, int>();
 
@@ -583,7 +586,7 @@ namespace MVC_Store.Areas.Admin.Controllers
 
                     string userName = user.UserName;
 
-                    foreach(var item in orderDetailsList)
+                    foreach (var item in orderDetailsList)
                     {
                         ProductDTO product = db.Products.FirstOrDefault(x => x.Id == item.ProductId);
 
@@ -599,7 +602,7 @@ namespace MVC_Store.Areas.Admin.Controllers
                     {
                         OrderNumber = el.OrderId,
                         UserName = userName,
-                        Total = total, 
+                        Total = total,
                         ProductsAndQuantity = productAndQty,
                         CreatedAt = el.CreatedAt
                     });
@@ -609,5 +612,119 @@ namespace MVC_Store.Areas.Admin.Controllers
             return View(ordersForAdmin);
         }
 
+        [HttpGet]
+        public ActionResult Import(HttpPostedFileBase excelfile)
+        {
+            return View("Import");
+        }
+
+        [HttpPost]
+        public ActionResult Import(ProductVM model, HttpPostedFileBase excelfile)
+        {
+            List<ProductVM> listProducts = new List<ProductVM>();
+            if (excelfile == null || excelfile.ContentLength == 0)
+            {
+                ViewBag.Error = "Please select a excel file<br>";
+                //return RedirectToAction("Import");
+                return View(model);
+            }
+            else
+            {
+                if (excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx"))
+                {
+                    string path = Server.MapPath("~/Content/" + excelfile.FileName);
+                    if (System.IO.File.Exists(path))
+                        System.IO.File.Delete(path);
+                    excelfile.SaveAs(path);
+                    // Read data from excel file
+                    Excel.Application application = new Excel.Application();
+                    Excel.Workbook workbook = application.Workbooks.Open(path);
+                    Excel.Worksheet worksheet = workbook.ActiveSheet;
+                    Excel.Range range = worksheet.UsedRange;
+                    List<string> nameSupliers = new List<string>();
+                    for (int row = 1; row <= range.Rows.Count; row++)
+                    {
+                        ProductVM p = new ProductVM();
+                        p.Name = ((Excel.Range)range.Cells[row, 1]).Text;
+                        p.Slug = ((Excel.Range)range.Cells[row, 2]).Text;
+                        p.Description = ((Excel.Range)range.Cells[row, 3]).Text;
+                        p.Price = Convert.ToDecimal(((Excel.Range)range.Cells[row, 4]).Text);
+                        p.CategoryName = ((Excel.Range)range.Cells[row, 5]).Text;
+                        p.ImageName = null;
+                        
+                        nameSupliers.Add(((Excel.Range)range.Cells[row, 6]).Text);
+                        listProducts.Add(p);
+                    }
+                    ViewBag.ListProducts = listProducts;
+                    List<CategoryVM> categories = new List<CategoryVM>();
+                    List<UserVM> users = new List<UserVM>();
+                    using(Db db = new Db())
+                    {
+                        categories = db.Categories.ToArray().Select(x => new CategoryVM(x)).ToList();
+                        users = db.Users.ToArray().Select(x => new UserVM(x)).ToList();
+                    }
+                    for(int i =0; i < listProducts.Count; i++)
+                    {
+                        listProducts[i].CategoryId = SearchCategoryId(listProducts[i], categories);
+                        listProducts[i].SuplierId = SeacrhSupplierId(users, nameSupliers[i]);
+                        SaveProductInDataBase(listProducts[i]);
+                    }
+                    
+                    return RedirectToAction("Import");
+                }
+                else
+                {
+                    ViewBag.Error = "File type is incorrect<br>";
+                    return RedirectToAction("Import");
+                }
+            }
+        }
+
+        private int SeacrhSupplierId(List<UserVM> user, string userName)
+        {
+            int index = 0;
+            for (int i = 0; i < user.Count; i++) 
+            {
+                index = userName.IndexOf(" ");
+                string name = userName.Substring(0,index);
+                string lastName = userName.Substring(index + 1);
+                if (name == user[i].FirstName && lastName == user[i].LastName) 
+                {
+                    return user[i].Id;
+                }
+            }
+            return -1;
+        }
+
+        private int SearchCategoryId(ProductVM productVM, List<CategoryVM> categories)
+        {
+            for(int i = 0; i < categories.Count; i++)
+            {
+                if(productVM.CategoryName == categories[i].Name)
+                {
+                    return categories[i].Id;
+                }
+            }
+            return -1;
+        }
+
+        private void SaveProductInDataBase(ProductVM products)
+        {
+            using (Db db = new Db())
+            {
+                ProductDTO dto = new ProductDTO();
+
+                dto.Name = products.Name;
+                dto.Slug = products.Slug.Replace(" ", "-").ToLower();
+                dto.Description = products.Description;
+                dto.Price = products.Price;
+                dto.CategoryId = products.CategoryId;
+                dto.SuplierId = products.SuplierId;
+                //Внимательно посмотреть имена если нужно CategoryName
+                dto.CategoryName = products.CategoryName;
+                db.Products.Add(dto);
+                db.SaveChanges();
+            }
+        }
     }
 }

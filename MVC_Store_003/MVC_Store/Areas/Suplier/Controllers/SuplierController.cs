@@ -1,7 +1,9 @@
-﻿using MVC_Store.Models.Data;
+﻿using MVC_Store.GenerateDocuments;
+using MVC_Store.Models.Data;
 using MVC_Store.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -228,12 +230,10 @@ namespace MVC_Store.Areas.Suplier.Controllers
             }
 
 
-
             //Initialize and save model based ProductDTO
             using (Db db = new Db())
             {
                 WayBillDTO dto = new WayBillDTO();
-
                 dto.Base = model.Base;
                 dto.CreatedAt = DateTime.Now;
                 dto.DocumentNumber = id;
@@ -242,18 +242,34 @@ namespace MVC_Store.Areas.Suplier.Controllers
                 dto.RecipientName = model.RecipientName;
                 dto.TheCargoWasRealesed = model.RecipientName;
                 dto.IdProductInWayBill = 0;
-
                 db.WayBill.Add(dto);
                 db.SaveChanges();
                // id = dto.Id;
             }
 
             //Add message to TempData
+           
+            List<ProductVM> products = new List<ProductVM>();
+            List<ProductVM> test = new List<ProductVM>();
+            for(int i =0; i < IdProductInWayBill.Length; i++)
+            {
+                using(Db db = new Db())
+                {
+                    products.Add(new ProductVM(db.Products.ToArray().Where(x => x.Id == IdProductInWayBill[i]).First()));
+                 //   products = db.Products.ToArray().Select(x => new ProductVM(x)).Where(x => x.Id == IdProductInWayBill[i]).ToList();
+                }
+            }
+            model.DocumentNumber = id;
+            model.CreatedAt = DateTime.Now;
+            new GenerateWayBill.GeneratedClass().CreatePackage(model,  products);
             TempData["SM"] = "You have created a WayBill!";
-
+            //  string path = @"D:\Diplom\diplonProject\MVC_Store_003\Отчеты";
+            Process.Start(@"D:\Diplom\diplonProject\MVC_Store_003\Отчеты");
             // Redirect user*/
             return RedirectToAction("CreateWayBill");
         }
+
+        
         private int AddProductInWayBill(List<WayBillVM> wayBillVm, int id)
         {
             using (Db db = new Db())

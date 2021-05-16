@@ -164,3 +164,10 @@ D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\System.Memory.xml
 D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\System.Numerics.Vectors.xml
 D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\System.Runtime.CompilerServices.Unsafe.xml
 D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\System.Text.Encodings.Web.xml
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\DocumentFormat.OpenXml.dll
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\DocumentFormat.OpenXml.xml
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\ExcelDataReader.dll
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\ExcelNumberFormat.dll
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\ExcelDataReader.pdb
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\ExcelDataReader.xml
+D:\Diplom\diplonProject\MVC_Store_003\MVC_Store\bin\ExcelNumberFormat.xml
