@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Suplier DashBoard";
+}
+
+    <div style="text-align:center">
+        <h2>DashBoard</h2>
+        <a> @Html.ActionLink("Add Product", "AddProduct", "Suplier", "", new { @class = "btn btn-success" })</a>
+        <br /><br />
+        <a>
+            @Html.ActionLink("Get Way Bill", "GetWayBill", "Suplier", "", new { @class = "btn btn-success" })
+        </a><br /><br />
+        <a>
+            @Html.ActionLink("Edit Categories", "Categories", "Shop", "", new { @class = "btn btn-success" })
+        </a>
+        <br /><br /><a>     @Html.ActionLink("Edit Sidebar", "EditSidebar", "Pages", "", new { @class = "btn btn-success" })</a>
+    </div>
+

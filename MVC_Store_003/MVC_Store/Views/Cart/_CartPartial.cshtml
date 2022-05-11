@@ -1,0 +1,25 @@
+﻿@model MVC_Store.Models.ViewModels.Cart.CartVM
+
+    <div class="ajaxcart">
+
+        @if(@Model.Quantity == 1) 
+        {
+        <div>
+            Your cart: @Model.ProductName - @Model.Quantity item - @Model.Price $
+        </div>
+        }
+        else if (Model.Quantity == 0)
+        {
+    <div>
+        Your cart is empty!
+    </div>
+        }
+        else
+        {
+    <div>
+        Your cart: @Model.ProductName - @Model.Quantity items - @Model.Price $
+
+    </div>
+    }
+        @Html.ActionLink("Checkout", "Index")
+</div>

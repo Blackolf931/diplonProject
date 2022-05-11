@@ -1,0 +1,5 @@
+﻿@model MVC_Store.Models.ViewModels.Cart.CartVM
+
+Your cart: @Model.ProductName - @Model.Quantity items - @Model.Price $
+<br />
+@Html.ActionLink("Checkout", "Index")

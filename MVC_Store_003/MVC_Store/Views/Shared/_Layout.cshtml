@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Diplom project</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            @Html.ActionLink("Main Page", "GetAllProduct", "Shop", null, new { @class = "navbar-text", style = "text-decoration:none" })
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+
+                        @Html.Action("PagesManuPartial", "Pages")
+
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Account
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="text-align:center">
+
+                                    <a class="dropdown-item" href="/account/user-profile">&nbsp;My profile</a>
+                                    @if (Request.IsAuthenticated && User.IsInRole("User"))
+                                    {
+                                        @Html.ActionLink("User orders", "Orders", "Account", null, new { @class = "navbar-text", style = "text-decoration:none; color:black" })
+                                    }
+                                    else if (Request.IsAuthenticated && User.IsInRole("Suplier"))
+                                    {
+                                        @Html.ActionLink("Suplier Area", "Index", "SuplierDashboard", new { area = "Suplier" }, new { style = "color:black;" });
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Admin Area", "Index", "Dashboard", new { area = "Admin" }, new { style = "color:black;" });
+                                    }
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item">@Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "navbar-text", style = "text-decoration:none;color:black" })</a>
+
+                                </div>
+                            </li>
+
+                        }
+                        else
+                        {
+                            if (ViewBag.Title == "Login")
+                            {
+                                <li>@Html.ActionLink("Login", "Login", "Account", null, new { @class = "navbar-text", style = "text-decoration:none" })</li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Login", "Login", "Account", null, new { @class = "navbar-text", style = "text-decoration:none" })</li>
+                            }
+                        }
+
+                        @if (Request.IsAuthenticated && User.IsInRole("User"))
+                        {
+
+                            if (ViewBag.Title == "User Profile")
+                            {
+                                <li class="active">@Html.Action("UserNavPartial", "Account", new { area = "" })</li>
+                            }
+                            else
+                            {
+                                <li>@Html.Action("UserNavPartial", "Account", new { area = "" })</li>
+                            }
+                        }
+                    </ul>
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                    }
+                    else
+                    {
+                        if (ViewBag.Title != "Cart Shop")
+                        {
+                            <span class="navbar-text" style="margin-right:20px;">
+                                @Html.Action("CartPartial", "Cart")
+                            </span>
+                        }
+                    }
+                    @using (Html.BeginForm("SearchData", "Shop"))
+                    {
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searchString">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+               
+                }
+                </div>
+</nav>
+
+    <div class="container body-content" style="margin-top:75px;">
+        <div class="row">
+            @if (ViewBag.Title != "Login" && ViewBag.Title != "Create Account" && ViewBag.Title != "Cart Shop" && ViewBag.Title != "Orders" && ViewBag.Title != "Checkout" && ViewBag.Title != "Product Details"
+                && ViewBag.Title != "User Profile")
+            {
+                <h4>Сортировка по цене:&nbsp;&nbsp;</h4>
+                @Html.ActionLink("Create WayBill", "CreateWayBill", "Suplier", null, new { @class = "navbar-text", style = "text-decoration:none" })
+                @Html.ActionLink("По возрастанию", "Price", "Shop", new { @class = "btn btn-info" })
+                @Html.ActionLink("По убыванию", "SortOfPriceDec", "Shop", new { @class = "btn btn-info", style = "margin-left: 15px" })
+            }
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-12 col-md-3 list-group">
+                @Html.Action("CategoryMenuPartial", "Shop")
+            </div>
+            @if (ViewBag.Sidebar == "Yes")
+            {
+                <div class="col">
+                    @RenderBody()
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    @Html.Action("SidebarPartial", "Pages")
+                </div>
+            }
+            else
+            {
+                <div class="col">
+                    @RenderBody()
+                </div>
+            }
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Diplom Project Online Shop</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/Scripts")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

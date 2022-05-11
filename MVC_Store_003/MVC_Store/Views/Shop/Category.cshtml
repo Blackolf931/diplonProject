@@ -1,0 +1,73 @@
+﻿@model IEnumerable<MVC_Store.Models.ViewModels.Shop.ProductVM>
+
+@{
+    ViewBag.Title = ViewBag.CategoryName;
+}
+@using PagedList.Mvc;
+@using PagedList;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<h2>@ViewBag.CategoryName</h2>
+
+<select id="SelectCategory" name="SelectCategory" style="display:none">
+
+    @foreach (var item in ViewBag.Categories)
+    {
+        if (ViewBag.SelectedCat == item.Value)
+        {
+            <option selected="selected" value="@item.Value">@item.Text</option>
+        }
+        else
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    }
+</select>
+<br />
+
+<table class="table" style="padding: 1.75rem">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            ImageName
+        </th>
+        <th></th>
+    </tr>
+
+        @foreach (var product in ViewBag.OnePageOfProducts)
+        {
+            <tr>
+                <td>
+                    @product.Name
+                </td>
+                <td>
+                    @product.Description
+                </td>
+                <td>
+                    @product.Price
+                </td>
+
+                <td>
+                    <a href="/shop/product-details/@product.Slug">
+                        <img src="/Images/Uploads/Products/@product.Id/Thumbs/@product.ImageName" />
+                    </a>
+                </td>
+                <td>
+                    <a href="/shop/product-details/@product.Slug" class="btn btn-info">Details</a>
+                </td>
+                </tr>
+        }
+    </table>
+
+@Html.PagedListPager((IPagedList)ViewBag.onePageOfProducts, page => Url.Action("Category", new { page, catId = ViewBag.SelectedCat }))
+@section Scripts
+{
+    <script src="~/Content/ShopJS/ProductsScript.js"></script>
+}

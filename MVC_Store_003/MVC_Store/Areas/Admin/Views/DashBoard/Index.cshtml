@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "DashBoard";
+}
+
+    <div style="text-align:center">
+        <h2>DashBoard</h2>
+        <a> @Html.ActionLink("Edit Pages", "Index", "Pages", "", new { @class = "btn btn-success" })</a>
+        <br /><br />
+        <a>
+            @Html.ActionLink("Edit Products", "Products", "Shop", "", new { @class = "btn btn-success" })
+        </a><br /><br />
+        <a>
+            @Html.ActionLink("Edit Categories", "Categories", "Shop", "", new { @class = "btn btn-success" })
+        </a>
+        <br /><br /><a>     @Html.ActionLink("Edit Sidebar", "EditSidebar", "Pages", "", new { @class = "btn btn-success" })</a>
+    </div>
+
+
